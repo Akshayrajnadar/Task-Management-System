@@ -13,9 +13,19 @@ const taskSchema = new Schema({
         type:Date,
         require: true
     },
+    adminid:{
+        type:Schema.Types.ObjectId,
+        ref:'admin',
+    },
+    userid:{
+        type:Schema.Types.ObjectId,
+        ref:'user',
+    },
     stauts:{
         type:String,
         enum:['Pending', 'In Progress', 'Completed'],
         require: true
     }
 }, {timestamps:true})
+
+module.exports = mongoose.model('task', taskSchema)
