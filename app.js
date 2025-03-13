@@ -6,7 +6,7 @@ const cors = require('cors');
 app.use(cors());
 
 //router
-const userRouter = require('./routes/userRouter');
+const userRouter = require('./src/routes/userRoute');
 
 //router use
 app.use('/user', userRouter);
