@@ -58,10 +58,6 @@ const userlogin = async (req, res) => {
 
         const comparepass = await encriptpassword.comparePassword(password, user.password)
         if(comparepass){
-            const token = tokenUtil.generateToken(user.email);
-            if(!token){
-                console.log("Fail to generate token.")
-            }
             res.status(200).json({
                 message: 'User login successfully',
                 status: 'success',
@@ -74,4 +70,4 @@ const userlogin = async (req, res) => {
     }
 }
 
-module.exports = {adduser, getUser}
+module.exports = {adduser, getUser, userlogin}

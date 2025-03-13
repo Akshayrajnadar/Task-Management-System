@@ -21,6 +21,6 @@ const userSchema = new Schema({
     token:{
         type: String,
     }
-})
+},{timestamps:true})
 
 module.exports = mongoose.model('user', userSchema);

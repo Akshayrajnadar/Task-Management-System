@@ -1,4 +1,5 @@
 const adminModel = require('../models/adminModel');
+const userModel = require('../models/userModel')
 
 const addAdmin = async (req, res) => {
 
@@ -19,8 +20,45 @@ const addAdmin = async (req, res) => {
     }
 }
 
+const getAllUsers = async (req, res) =>{
+    try{
+            console.log("get user")
+            const user = await userModel.find();
+            if(user){
+                return res.status(200).json({
+                    message: 'Fetched user successfully',
+                    status: 'success',
+                    data: user
+                })
+            }
+        }catch(err){
+            res.json({
+                message: "Error in getting user",
+                error: err.message
+            })
+    }
+}
+
 const adminlogin = async (req, res) =>{
     
 }
 
-module.exports = {addAdmin, adminlogin};
+const deleteUser = async (req, res) =>{
+    try{
+        const {id} = req.body
+        const userdelete = await userModel.findByIdAndDelete(id)
+        if(userdelete){
+            res.json({
+                message:"User deleted successfully!",
+    
+            })
+        }
+    }catch(err){
+        res.json({
+            message:"Not able to delete user",
+            error:err.message
+        })
+    }
+}
+
+module.exports = {addAdmin, adminlogin, getAllUsers};
