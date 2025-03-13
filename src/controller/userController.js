@@ -1,12 +1,21 @@
 const userModel = require('../models/userModel');
-const generatetoken = require('../utils/TokenUtil');
+const encriptpassword = require('../utils/EncriptPassword');
+const tokenUtil = require('../utils/TokenUtil');
 
 const adduser = async (req, res) => {
 
     try{
         const {name, email, password, role} = req.body;
-        const encriptpassword = generatetoken.generateToken(res.body.password)
-        const userDetail = {...req.body, encriptpassword};
+
+        const encriptpassword = await encriptpassword.hashPassword(res.body.password)
+        
+        const token = tokenUtil.generateToken(res.body.email);
+        if(!token){
+            console.log("Fail to generate token.")
+        }
+
+        const userDetail = {...req.body, password:encriptpassword, token:token};
+        
         const user =  await userModel.create(userDetail)
 
         res.status(200).json({
@@ -38,6 +47,30 @@ const getUser = async (req, res) => {
             message: "Error in getting user",
             error: err.message
         })
+    }
+}
+
+const userlogin = async (req, res) => {
+    try{
+        const {email, password} = req.body;
+
+        const user = await userModel.findOne({email:email})
+
+        const comparepass = await encriptpassword.comparePassword(password, user.password)
+        if(comparepass){
+            const token = tokenUtil.generateToken(user.email);
+            if(!token){
+                console.log("Fail to generate token.")
+            }
+            res.status(200).json({
+                message: 'User login successfully',
+                status: 'success',
+                data: user,
+                token: token
+            })
+        }
+    }catch(err){
+
     }
 }
 
