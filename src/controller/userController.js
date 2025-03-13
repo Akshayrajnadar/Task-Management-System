@@ -1,10 +1,12 @@
 const userModel = require('../models/userModel');
+const generatetoken = require('../utils/TokenUtil');
 
 const adduser = async (req, res) => {
 
     try{
         const {name, email, password, role} = req.body;
-        const userDetail = {...req.body};
+        const encriptpassword = generatetoken.generateToken(res.body.password)
+        const userDetail = {...req.body, encriptpassword};
         const user =  await userModel.create(userDetail)
 
         res.status(200).json({
@@ -22,12 +24,15 @@ const adduser = async (req, res) => {
 
 const getUser = async (req, res) => {
     try{
+        console.log("get user")
         const user = await userModel.find();
-        res.status(200).json({
-            message: 'User details',
-            status: 'success',
-            data: user
-        })
+        if(user){
+            return res.status(200).json({
+                message: 'Fetched user successfully',
+                status: 'success',
+                data: user
+            })
+        }
     }catch(err){
         res.json({
             message: "Error in getting user",
