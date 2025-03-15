@@ -7,14 +7,16 @@ const adduser = async (req, res) => {
     try{
         const {name, email, password, role} = req.body;
 
-        const encriptpassword = await encriptpassword.hashPassword(res.body.password)
+        const encriptedpassword = await encriptpassword.hashPassword(password)
+        console.log(encriptedpassword)
         
-        const token = tokenUtil.generateToken(res.body.email);
+        const token = tokenUtil.generateToken(email);
         if(!token){
             console.log("Fail to generate token.")
         }
+        console.log(token)
 
-        const userDetail = {...req.body, password:encriptpassword, token:token};
+        const userDetail = {name:name, role:role, password:encriptedpassword, token:token};
         
         const user =  await userModel.create(userDetail)
 
