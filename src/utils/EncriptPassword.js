@@ -1,10 +1,12 @@
 const bcrypt = require('bcrypt');
-const hashPassword = async(password) =>{
+const hashPassword = async (password) => {
+    if (!password) throw new Error("Password is required for hashing");
 
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(password, salt);
-    return hashPassword
-}
+    const bcrypt = require("bcrypt");
+    const saltRounds = 10;
+    return await bcrypt.hash(password, saltRounds);
+};
+
 
 const comparePassword =(password, hashPassword)=>{
     return bcrypt.compare(password, hashPassword);

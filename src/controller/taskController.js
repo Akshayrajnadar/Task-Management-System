@@ -1,9 +1,10 @@
-const taskModel = require('../model/taskModel');
+const taskModel = require('../models/taskModel');
 
 const addTask = async (req, res) => {
     try{
-        const {task, status, description, duedate} = req.body;
-        const taskDetail = await taskModel.create(res.body);
+        const data =  req.body;
+        console.log(data);
+        const taskDetail = await taskModel.create(data);
         if(taskDetail){
             res.status(201).json({message: "Task added successfully", data:taskDetail});
         }

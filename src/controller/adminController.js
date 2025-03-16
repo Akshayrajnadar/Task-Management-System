@@ -1,14 +1,15 @@
 const adminModel = require('../models/adminModel');
 const userModel = require('../models/userModel')
+const bcrypt = require('bcrypt');
 
 const addAdmin = async (req, res) => {
 
     try{
-        const {name, email, password, role} = req.body;
+        const data = req.body;
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(data.password, 10);
 
-        const adminDetail = {...req.body, password: hashedPassword, role};
+        const adminDetail = {name:data.name, email:data.email, password: hashedPassword, role: data.role};
 
         const admin = await adminModel.create(adminDetail);
 

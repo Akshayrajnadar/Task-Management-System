@@ -7,9 +7,13 @@ app.use(cors());
 
 //router
 const userRouter = require('./src/routes/userRoute');
+const taskRouter = require('./src/routes/taskRoute');
+const adminRouter = require('./src/routes/adminRoute');
 
 //router use
 app.use('/user', userRouter);
+app.use('/task', taskRouter);
+app.use('/admin', adminRouter);
 
 //db connection
 

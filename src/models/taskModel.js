@@ -20,6 +20,7 @@ const taskSchema = new Schema({
     userid:{
         type:Schema.Types.ObjectId,
         ref:'user',
+        require: true
     },
     stauts:{
         type:String,
