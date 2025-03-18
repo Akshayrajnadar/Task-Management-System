@@ -24,6 +24,19 @@ const getTask = async (req, res) => {
     }
 }
 
+const getTaskById = async (req, res) => {
+    try{
+        const taskId = req.params.id;
+        console.log("Task ID",taskId);
+        const task = await taskModel.findById(taskId);
+        if(task){
+            res.status(200).json({message: "Fetched task successfully", data:task});
+        }
+    }catch(err){
+        res.status(500).json({message: "Error in getting task", error:err.message});
+    }
+}
+
 const getUserTask = async (req, res) => {
     try{
         const {id} = req.body;
@@ -61,4 +74,4 @@ const deleteTask = async(req, res) => {
 }
 }
 
-module.exports = {addTask, getTask, getUserTask, updateUsersTask, deleteTask}
+module.exports = {addTask, getTask, getUserTask, updateUsersTask, deleteTask, getTaskById}

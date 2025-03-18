@@ -49,6 +49,28 @@ const adduser = async (req, res) => {
 const getUser = async (req, res) => {
     try{
         console.log("get user")
+        const email = req.body.email;
+        console.log("Email:", email);
+        const user = await userModel.findOne({email: email});
+        console.log("Successfully fetched user");
+        if(user){
+            return res.status(200).json({
+                message: 'Fetched user successfully',
+                status: 'success',
+                data: user
+            })
+        }
+    }catch(err){
+        res.json({
+            message: "Error in getting user",
+            error: err.message
+        })
+    }
+}
+
+const getALLUser = async (req, res) => {
+    try{
+        console.log("get user")
         const user = await userModel.find();
         if(user){
             return res.status(200).json({
@@ -66,23 +88,44 @@ const getUser = async (req, res) => {
 }
 
 const userlogin = async (req, res) => {
-    try{
-        const {email, password} = req.body;
+    try {
+        const data = req.body;
+        console.log("Data:", data.password);
+        console.log("Data:", data.email);
 
-        const user = await userModel.findOne({email:email})
+        // Check if email exists
+        const user = await userModel.findOne({ email: data.email });
 
-        const comparepass = await encriptpassword.comparePassword(password, user.password)
-        if(comparepass){
-            res.status(200).json({
-                message: 'User login successfully',
-                status: 'success',
-                data: user,
-                token: token
-            })
+        if (!user) {
+            return res.status(400).json({
+                message: "Invalid email or password",
+                status: "error"
+            });
         }
-    }catch(err){
 
+        // Compare passwords
+        const comparepass = await encriptpassword.comparePassword(data.password, user.password);
+
+        if (!comparepass) {
+            return res.status(400).json({
+                message: "Invalid email or password",
+                status: "error"
+            });
+        }
+
+        res.status(200).json({
+            message: "User login successfully",
+            status: "success",
+            data: user,
+        });
+
+    } catch (err) {
+        console.error("Login Error:", err.message);
+        res.status(500).json({
+            message: "Something went wrong",
+            error: err.message
+        });
     }
 }
 
-module.exports = {adduser, getUser, userlogin}
+module.exports = {adduser, getALLUser,getUser, userlogin}
