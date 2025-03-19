@@ -26,21 +26,20 @@ const getTask = async (req, res) => {
 
 const getTaskByUserId = async (req, res) => {
     try {
-        console.log("Reach Backend getTaskByUserId");
-        const {userId}  = req.body; // Correct usage of req.body
+        const userId = req.params.id; // Correct naming
         console.log("User ID:", userId);
 
-        // Validate userId format (optional but recommended)
+        // Check if userId is a valid MongoDB ObjectId
         if (!userId.match(/^[0-9a-fA-F]{24}$/)) {
             return res.status(400).json({ message: "Invalid user ID format" });
         }
 
-        // Correct query to fetch tasks by userId
-        const tasks = await taskModel.find({ userid: userId });
+        // Query tasks by userId (ensure field name matches database schema)
+        const tasks = await taskModel.find({ userId });
 
         return res.status(200).json({
             message: "Fetched tasks successfully",
-            data: tasks, // Return fetched tasks
+            data: tasks || [], // Return an empty array if no tasks are found
         });
 
     } catch (err) {
@@ -51,8 +50,6 @@ const getTaskByUserId = async (req, res) => {
         });
     }
 };
-
-
 
 
 
