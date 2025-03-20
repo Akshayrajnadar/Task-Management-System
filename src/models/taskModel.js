@@ -25,6 +25,7 @@ const taskSchema = new Schema({
     stauts:{
         type:String,
         enum:['Pending', 'In Progress', 'Completed'],
+        default: 'Pending',
         require: true
     }
 }, {timestamps:true})

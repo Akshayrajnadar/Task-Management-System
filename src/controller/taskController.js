@@ -25,17 +25,18 @@ const getTask = async (req, res) => {
 }
 
 const getTaskByUserId = async (req, res) => {
+    console.log("Got inside get task by user id")
     try {
-        const userId = req.params.id; // Correct naming
-        console.log("User ID:", userId);
+        const userid = req.params.id; // Correct naming
+        console.log("User ID:", userid);
 
         // Check if userId is a valid MongoDB ObjectId
-        if (!userId.match(/^[0-9a-fA-F]{24}$/)) {
-            return res.status(400).json({ message: "Invalid user ID format" });
-        }
+        // if (!userId.match(/^[0-9a-fA-F]{24}$/)) {
+        //     return res.status(400).json({ message: "Invalid user ID format" });
+        // }
 
         // Query tasks by userId (ensure field name matches database schema)
-        const tasks = await taskModel.find({ userId });
+        const tasks = await taskModel.find({ userid });
 
         return res.status(200).json({
             message: "Fetched tasks successfully",
@@ -91,4 +92,20 @@ const deleteTask = async(req, res) => {
 }
 }
 
-module.exports = {addTask, getTask, getUserTask, updateUsersTask, deleteTask, getTaskByUserId}
+const updatetaskbyid = async(req, res) => {
+    try{
+        const id  = req.params.id;
+        console.log(id);
+        const updatedData = req.body;
+        console.log(updatedData);
+        const task = await taskModel.findByIdAndUpdate({id:id},{updatedData:updatedData});
+        if(task){
+            res.status(200).json({message: "Task updated successfully", data:task});
+        }
+    }
+    catch(err){
+        res.status(500).json({message: "Error in updating task", error:err.message});
+    }
+    }
+
+module.exports = {addTask, getTask, getUserTask, updateUsersTask, deleteTask, getTaskByUserId, updatetaskbyid};
