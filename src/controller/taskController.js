@@ -108,4 +108,32 @@ const updatetaskbyid = async(req, res) => {
     }
     }
 
-module.exports = {addTask, getTask, getUserTask, updateUsersTask, deleteTask, getTaskByUserId, updatetaskbyid};
+    const updateTaskStatus = async (req, res) => {
+        try {
+            console.log("req.params", req.params.id);
+            console.log("req.body", req.body);
+    
+            const id = req.params.id;
+            const { status } = req.body; // Destructure the status from body
+    
+            console.log("Got all the data");
+    
+            const task = await taskModel.findByIdAndUpdate(
+                id,
+                { stauts: status }, // Use correct field name and structure
+                { new: true } // Return updated task
+            );
+    
+            if (task) {
+                console.log("Task updated successfully");
+                res.status(200).json({ message: "Task updated successfully", data: task });
+            } else {
+                res.status(404).json({ message: "Task not found" });
+            }
+        } catch (err) {
+            res.status(500).json({ message: "Error in updating task", error: err.message });
+        }
+    };
+    
+
+module.exports = {addTask, getTask, getUserTask, updateUsersTask, deleteTask, getTaskByUserId, updatetaskbyid, updateTaskStatus};
